@@ -7,9 +7,11 @@ import { Team } from '../models/Team.js';
 import { User } from '../models/User.js';
 import { Workout } from '../models/Workout.js';
 dotenv.config();
+// Seed the octofit_db database with test data
 async function seedDatabase() {
     try {
         await connectDatabase();
+        console.log('Seed the octofit_db database with test data');
         await Promise.all([
             User.deleteMany({}),
             Team.deleteMany({}),

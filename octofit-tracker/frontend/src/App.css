@@ -3,8 +3,35 @@
   background: linear-gradient(135deg, #f4f7fb 0%, #eef6ff 100%);
 }
 
+.topbar {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navbar {
+  min-height: 4.5rem;
+}
+
+.navbar-brand {
+  letter-spacing: -0.04em;
+}
+
+.nav-link {
+  color: #334155;
+  font-weight: 600;
+}
+
+.nav-link.active {
+  background: #eaf2ff;
+  color: #1d4ed8;
+}
+
 .hero-section {
-  min-height: 100vh;
+  min-height: 32rem;
   display: flex;
   align-items: center;
 }
@@ -17,7 +44,9 @@
   color: #2d6cdf;
 }
 
-.stats-card {
+.stats-card,
+.feature-card,
+.card {
   border-radius: 1.5rem;
 }
 
@@ -29,4 +58,8 @@
 
 .progress-bar {
   background: linear-gradient(90deg, #2d6cdf 0%, #67b0ff 100%);
+}
+
+.alert {
+  border-radius: 1rem;
 }

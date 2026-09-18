@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { fetchCollection } from '../utils/api';
+import { normalizeCollectionResponse } from '../utils/api';
+
+const teamsApiUrl = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/teams/`
+  : 'http://localhost:8000/api/teams/';
 
 function Teams() {
   const [items, setItems] = useState([]);
@@ -13,7 +17,14 @@ function Teams() {
     async function loadTeams() {
       try {
         setLoading(true);
-        const data = await fetchCollection('teams');
+        const response = await fetch(teamsApiUrl);
+
+        if (!response.ok) {
+          throw new Error('Unable to load teams.');
+        }
+
+        const payload = await response.json();
+        const data = normalizeCollectionResponse(payload);
 
         if (active) {
           setItems(data);

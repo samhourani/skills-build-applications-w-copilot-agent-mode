@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { fetchCollection } from '../utils/api';
+import { normalizeCollectionResponse } from '../utils/api';
+
+const leaderboardApiUrl = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  : 'http://localhost:8000/api/leaderboard/';
 
 function Leaderboard() {
   const [items, setItems] = useState([]);
@@ -13,7 +17,14 @@ function Leaderboard() {
     async function loadLeaderboard() {
       try {
         setLoading(true);
-        const data = await fetchCollection('leaderboard');
+        const response = await fetch(leaderboardApiUrl);
+
+        if (!response.ok) {
+          throw new Error('Unable to load leaderboard.');
+        }
+
+        const payload = await response.json();
+        const data = normalizeCollectionResponse(payload);
 
         if (active) {
           setItems(data);

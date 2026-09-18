@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { fetchCollection } from '../utils/api';
+import { normalizeCollectionResponse } from '../utils/api';
+
+const usersApiUrl = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users/`
+  : 'http://localhost:8000/api/users/';
 
 function Users() {
   const [items, setItems] = useState([]);
@@ -13,7 +17,14 @@ function Users() {
     async function loadUsers() {
       try {
         setLoading(true);
-        const data = await fetchCollection('users');
+        const response = await fetch(usersApiUrl);
+
+        if (!response.ok) {
+          throw new Error('Unable to load users.');
+        }
+
+        const payload = await response.json();
+        const data = normalizeCollectionResponse(payload);
 
         if (active) {
           setItems(data);

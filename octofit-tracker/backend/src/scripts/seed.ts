@@ -1,20 +1,39 @@
-import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-const connectionString = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
+import { connectDatabase } from '../config/database.js';
+import { mockActivities, mockLeaderboard, mockTeams, mockUsers, mockWorkouts } from '../data/mockData.js';
+import { Activity } from '../models/Activity.js';
+import { LeaderboardEntry } from '../models/LeaderboardEntry.js';
+import { Team } from '../models/Team.js';
+import { User } from '../models/User.js';
+import { Workout } from '../models/Workout.js';
 
-/**
- * Seed the octofit_db database with test data
- */
+dotenv.config();
+
+// Seed the octofit_db database with test data
+
 async function seedDatabase() {
   try {
-    await mongoose.connect(connectionString);
+    await connectDatabase();
+    console.log('Seed the octofit_db database with test data');
 
-    console.log('Connected to octofit_db');
+    await Promise.all([
+      User.deleteMany({}),
+      Team.deleteMany({}),
+      Activity.deleteMany({}),
+      LeaderboardEntry.deleteMany({}),
+      Workout.deleteMany({}),
+    ]);
 
-    // TODO: Add seed data for users, teams, activities, leaderboard, and workouts
+    await Promise.all([
+      User.insertMany(mockUsers),
+      Team.insertMany(mockTeams),
+      Activity.insertMany(mockActivities),
+      LeaderboardEntry.insertMany(mockLeaderboard),
+      Workout.insertMany(mockWorkouts),
+    ]);
 
-    console.log('Database seeding complete');
-    await mongoose.disconnect();
+    console.log('Database seeding complete for Octofit Tracker');
   } catch (error) {
     console.error('Error seeding database:', error);
     process.exit(1);
